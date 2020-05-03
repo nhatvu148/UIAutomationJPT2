@@ -37,7 +37,7 @@ namespace AutoJPT2
         public static void CleanupAfterAllTests()
         {
             Debug.WriteLine("Hello ClassCleanup");
-            
+
             Driver.Quit();
             /*Driver.FindElementByName("Application menu").Click();
             action = new Actions(Driver);
@@ -150,6 +150,145 @@ namespace AutoJPT2
             //.GetAttribute("LegacyIAccessible.Value")
             //Assert.AreEqual("0", originX.Text);
 
+        }
+
+        [TestMethod]
+        public void ScenarioMazda3DMesh()
+        {
+            var appMenu = Driver.FindElementByXPath("//Button[@Name='Application menu']");
+            appMenu.Click();
+            action = new Actions(Driver);
+            action.SendKeys(Keys.Down);
+            action.SendKeys(Keys.Down);
+            action.SendKeys(Keys.Enter);
+            action.Build();
+            action.Perform();
+
+            System.Threading.Thread.Sleep(1000);
+            action = new Actions(Driver);
+            action.SendKeys(@"D:\TestMazda\R2-IDI3_TS.jtdb");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+
+            Driver.FindElementByName("Assembly").Click();
+            var boltOld = Driver.FindElementByXPath("//TreeItem[@Name='bolt_old']");
+            action = new Actions(Driver);
+            action.MoveToElement(boltOld);
+            // Right Click
+            action.ContextClick();
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Enter);
+            action.Build();
+            action.Perform();
+
+            var headCyl = Driver.FindElementByXPath("//TreeItem[@Name ='HEAD-CYL']");
+            action = new Actions(Driver);
+            action.MoveToElement(headCyl);
+            // Right Click
+            action.ContextClick();
+            action.Build();
+            action.Perform();
+            Driver.FindElementByXPath("//MenuItem[@Name ='Show Only']").Click();
+
+            Driver.FindElementByXPath("//TabItem[@Name ='Geometry']").Click();
+            Driver.FindElementByXPath("//SplitButton[@Name ='Show Adjacent']").Click();
+
+            action = new Actions(Driver);
+            action.SendKeys(Keys.Down);
+            action.SendKeys(Keys.Enter);
+            action.Build();
+            action.Perform();
+
+            Driver.FindElementByXPath("//CheckBox[@Name ='Start Face']").Click();
+            Driver.FindElementByName("Home").Click();
+            var find = Driver.FindElementByName("Find");
+            action = new Actions(Driver);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys(Keys.Down);
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+
+            WindowsElement idBox = Driver.FindElementByAccessibilityId("1582");
+            InputId(15254, idBox, action, Driver, find);
+
+            Driver.FindElementByXPath("//CheckBox[@Name ='Stop Face']").Click();
+            InputId(19885, idBox, action, Driver, find);
+            InputId(16323, idBox, action, Driver, find);
+            InputId(20597, idBox, action, Driver, find);
+            InputId(20487, idBox, action, Driver, find);
+            InputId(20596, idBox, action, Driver, find);
+            InputId(20698, idBox, action, Driver, find);
+            InputId(20694, idBox, action, Driver, find);
+
+            var numLayers = Driver.FindElementByXPath("//Edit[@Name='Number of Layers']");
+            numLayers.Clear();
+            numLayers.SendKeys("100");
+            Driver.FindElementByXPath("//Button[@Name ='OK']").Click();
+            // Screenshot to compare ?
+
+            action = new Actions(Driver);
+            var mainWindow = Driver.FindElementByAccessibilityId("59648");
+
+            action.MoveToElement(mainWindow);
+            // Right Click
+            action.ContextClick();
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Enter);
+
+            //  Driver.FindElementByName("Create Group").Click();
+            action.SendKeys(Keys.Right);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Enter);
+            action.Build();
+            action.Perform();
+
+            var groupName = Driver.FindElementByAccessibilityId("1001");
+            groupName.Clear();
+            groupName.SendKeys("WaterJacket");
+            Driver.FindElementByXPath("//Button[@Name ='OK']").Click();
+
+            appMenu.Click();
+            action = new Actions(Driver);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Up);
+            action.SendKeys(Keys.Enter);
+            action.Build();
+            action.Perform();
+
+            System.Threading.Thread.Sleep(1000);
+            action = new Actions(Driver);
+            action.SendKeys(@"D:\TestMazda\01_Groups.jtdb");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+
+
+        }
+
+        public static void InputId(int faceId, WindowsElement idBox, Actions action,
+                            WindowsDriver<WindowsElement> sessionJpt, WindowsElement find)
+        {
+            idBox.SendKeys(Keys.Control + "a" + Keys.Control);
+            idBox.SendKeys(Convert.ToString(faceId));
+            action = new Actions(sessionJpt);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2 - 30, find.Size.Height / 3 - 4).Click().Perform();
         }
 
         [TestCleanup]
