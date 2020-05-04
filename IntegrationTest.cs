@@ -10,8 +10,8 @@ using OpenQA.Selenium.Support.UI;
 namespace JupiterTestAPI
 {
     [TestClass]
-    [TestCategory("Jupiter Test")]
-    public class JupiterTest
+    [TestCategory("Integration Test")]
+    public class IntegrationTest
     {
         protected static WindowsDriver<WindowsElement> Driver;
         protected static TestContext objTestContext;
@@ -45,18 +45,18 @@ namespace JupiterTestAPI
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            /*if (Driver != null)
+            if (Driver != null)
             {
                 Driver.Quit();
                 Driver = null;
-            }*/
+            }
 
         }
 
         [TestInitialize]
         public void SetupBeforeEveryTestMethod()
         {
-            wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(50));
+            wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             Assert.IsNotNull(wait);
             Driver.Manage().Window.Maximize();
             jupiter = Driver.FindElementByXPath("//Window[starts-with(@Name,'Jupiter-Pre 5.0')]");
@@ -64,7 +64,7 @@ namespace JupiterTestAPI
         }
 
         [TestMethod]
-        public void CreateMesh1()
+        public void CreateMesh()
         {
             Driver.FindElementByName("Open...").Click();
 
@@ -95,7 +95,8 @@ namespace JupiterTestAPI
             action.ContextClick();
             action.Build().Perform();
             Driver.FindElementByXPath("//MenuItem[@Name ='Show Only']").Click();
-
+       
+            //////////////////////////////////////////////
             var geometry = toolBar.FindElementByXPath("//TabItem[@Name ='Geometry']");
             geometry.Click();
             Driver.FindElementByXPath("//SplitButton[@Name ='Show Adjacent']").Click();
@@ -140,6 +141,9 @@ namespace JupiterTestAPI
             showAdj.FindElementByName("Apply").Click();
             // Screenshot to compare ?
 
+            //////////////////////////////////////////////
+            
+
             var tools = toolBar.FindElementByName("Tools");
             tools.Click();
             var modelFilter = Driver.FindElementByName("Model Filter");
@@ -167,19 +171,9 @@ namespace JupiterTestAPI
             action.SendKeys(@"V:\TechnoStar\Mazda\01_Groups.jtdb");
             action.SendKeys(Keys.Enter);
             action.Perform();
-        }
 
-        [TestMethod]
-        public void CreateMesh2()
-        {
-            Driver.FindElementByName("Open...").Click();
-
-            System.Threading.Thread.Sleep(1000);
-            action = new Actions(Driver);
-            Assert.IsNotNull(action);
-            action.SendKeys(@"V:\TechnoStar\Mazda\01_Groups.jtdb");
-            action.SendKeys(Keys.Enter);
-            action.Perform();
+            //////////////////////////////////////////////
+            
 
             var meshing = toolBar.FindElementByName("Meshing");
             meshing.Click();
@@ -217,9 +211,11 @@ namespace JupiterTestAPI
             action.SendKeys(Keys.Enter).Perform();
             Driver.FindElementByName("Apply").Click();
 
+            //////////////////////////////////////////////
+           
 
-            meshing.Click();
-
+            Driver.FindElementByName("Meshing").Click();
+           
             action = new Actions(Driver);
             action.MoveToElement(localSettingIcon, localSettingIcon.Size.Width / 4,
                 localSettingIcon.Size.Height / 2).Click().Perform();
@@ -231,6 +227,7 @@ namespace JupiterTestAPI
             Assert.IsNotNull(localSettingParts);
             localSettingParts.Clear();
             localSettingParts.SendKeys("Guide-Seat-Valve");
+
             meshSizeCB = Driver.FindElementByAccessibilityId("1005");
             if (!meshSizeCB.Selected) meshSizeCB.Click();
 
@@ -268,67 +265,6 @@ namespace JupiterTestAPI
             System.Threading.Thread.Sleep(1000);
             var saveText = Driver.FindElementByAccessibilityId("1001");
             saveText.SendKeys(@"V:\TechnoStar\Mazda\02_Local_Settings.jtdb");
-            saveText.SendKeys(Keys.Enter);
-        }
-
-        [TestMethod]
-        public void CreateMesh3()
-        {
-            Driver.FindElementByName("Open...").Click();
-
-            System.Threading.Thread.Sleep(1000);
-            action = new Actions(Driver);
-            Assert.IsNotNull(action);
-            action.SendKeys(@"V:\TechnoStar\Mazda\02_Local_Settings.jtdb");
-            action.SendKeys(Keys.Enter);
-            action.Perform();
-
-            toolBar.FindElementByName("Meshing").Click();
-            Driver.FindElementByName("Surface Meshing").Click();
-
-            allParts = Driver.FindElementByName("All Parts");
-            var block = allParts.FindElementByName("BLOCK");
-            block.Click();
-            action = new Actions(Driver);
-            action.KeyDown(Keys.Control).Perform();
-            allParts.FindElementByName("GUIDE-VALVE").Click();
-            allParts.FindElementByName("HEAD-CYL").Click();
-            allParts.FindElementByName("liner").Click();
-            allParts.FindElementByName("valve-exh").Click();
-            allParts.FindElementByName("valve-int").Click();
-            allParts.FindElementByName("valve-seat-exh").Click();
-            allParts.FindElementByName("valve-seat-int").Click();
-            action.MoveToElement(block);
-            action.ContextClick().Perform();
-            action.SendKeys(Keys.Down);
-            action.SendKeys(Keys.Enter).Perform();
-
-            action = new Actions(Driver);
-            action.KeyUp(Keys.Control).Perform();
-
-            var meshSurf = jupiter.FindElementByName("Meshing Surf Meshing");
-            meshSurf.FindElementByAccessibilityId("1001").Clear();
-            meshSurf.FindElementByAccessibilityId("1001").SendKeys("5");
-            meshSurf.FindElementByAccessibilityId("1002").Clear();
-            meshSurf.FindElementByAccessibilityId("1002").SendKeys("1");
-            meshSurf.FindElementByAccessibilityId("1003").Clear();
-            meshSurf.FindElementByAccessibilityId("1003").SendKeys("10");
-            meshSurf.FindElementByAccessibilityId("1004").Clear();
-            meshSurf.FindElementByAccessibilityId("1004").SendKeys("1");
-            meshSurf.FindElementByName("OK").Click();
-
-            System.Threading.Thread.Sleep(240000);
-            action = new Actions(Driver);
-            action.MoveToElement(meshSurf).Click();
-            action.SendKeys(Keys.Escape);
-            action.Perform();
-
-            Driver.FindElementByXPath("//Button[@Name='Application menu']").Click();
-            Driver.FindElementByName("Save As...").Click();
-
-            System.Threading.Thread.Sleep(1000);
-            var saveText = Driver.FindElementByAccessibilityId("1001");
-            saveText.SendKeys(@"V:\TechnoStar\Mazda\03_Surface_meshing.jtdb.jtdb");
             saveText.SendKeys(Keys.Enter);
         }
 
