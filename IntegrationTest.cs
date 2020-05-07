@@ -71,7 +71,7 @@ namespace JupiterTestAPI
             System.Threading.Thread.Sleep(1000);
             action = new Actions(Driver);
             Assert.IsNotNull(action);
-            action.SendKeys(@"V:\TechnoStar\Mazda\R2-IDI3_TS.jtdb");
+            action.SendKeys(@"D:\TechnoStar\Mazda\R2-IDI3_TS.jtdb");
             action.SendKeys(Keys.Enter);
             action.Perform();
 
@@ -168,7 +168,7 @@ namespace JupiterTestAPI
 
             System.Threading.Thread.Sleep(1000);
             action = new Actions(Driver);
-            action.SendKeys(@"V:\TechnoStar\Mazda\01_Groups.jtdb");
+            action.SendKeys(@"D:\TechnoStar\Mazda\01_Groups.jtdb");
             action.SendKeys(Keys.Enter);
             action.Perform();
 
@@ -264,8 +264,88 @@ namespace JupiterTestAPI
 
             System.Threading.Thread.Sleep(1000);
             var saveText = Driver.FindElementByAccessibilityId("1001");
-            saveText.SendKeys(@"V:\TechnoStar\Mazda\02_Local_Settings.jtdb");
+            saveText.SendKeys(@"D:\TechnoStar\Mazda\02_Local_Settings.jtdb");
             saveText.SendKeys(Keys.Enter);
+
+            toolBar.FindElementByName("Meshing").Click();
+            Driver.FindElementByName("Surface Meshing").Click();
+
+            allParts = Driver.FindElementByName("All Parts");
+            var block = allParts.FindElementByName("BLOCK");
+            block.Click();
+            action = new Actions(Driver);
+            action.KeyDown(Keys.Control).Perform();
+            allParts.FindElementByName("GUIDE-VALVE").Click();
+            allParts.FindElementByName("HEAD-CYL").Click();
+            allParts.FindElementByName("liner").Click();
+            allParts.FindElementByName("valve-exh").Click();
+            allParts.FindElementByName("valve-int").Click();
+            allParts.FindElementByName("valve-seat-exh").Click();
+            allParts.FindElementByName("valve-seat-int").Click();
+            action.MoveToElement(block);
+            action.ContextClick().Perform();
+            action.SendKeys(Keys.Down);
+            action.SendKeys(Keys.Enter).Perform();
+
+            action = new Actions(Driver);
+            action.KeyUp(Keys.Control).Perform();
+
+            var meshSurf = jupiter.FindElementByName("Meshing Surf Meshing");
+            meshSurf.FindElementByAccessibilityId("1001").Clear();
+            meshSurf.FindElementByAccessibilityId("1001").SendKeys("5");
+            meshSurf.FindElementByAccessibilityId("1002").Clear();
+            meshSurf.FindElementByAccessibilityId("1002").SendKeys("1");
+            meshSurf.FindElementByAccessibilityId("1003").Clear();
+            meshSurf.FindElementByAccessibilityId("1003").SendKeys("10");
+            meshSurf.FindElementByAccessibilityId("1004").Clear();
+            meshSurf.FindElementByAccessibilityId("1004").SendKeys("1");
+            meshSurf.FindElementByName("OK").Click();
+
+            System.Threading.Thread.Sleep(180000);
+            action = new Actions(Driver);
+            action.MoveToElement(meshSurf).Click();
+            action.SendKeys(Keys.Escape);
+            action.Perform();
+
+            Driver.FindElementByXPath("//Button[@Name='Application menu']").Click();
+            Driver.FindElementByName("Save As...").Click();
+
+            System.Threading.Thread.Sleep(1000);
+            saveText = Driver.FindElementByAccessibilityId("1001");
+            saveText.SendKeys(@"D:\TechnoStar\Mazda\03_Surface_meshing.jtdb");
+            saveText.SendKeys(Keys.Enter);
+
+            toolBar.FindElementByName("Mesh Cleanup").Click();
+            Driver.FindElementByName("Free Edges").Click();
+
+            allParts = Driver.FindElementByName("All Parts");
+            //block = allParts.FindElementByName("BLOCK");
+            block.Click();
+            action = new Actions(Driver);
+            action.KeyDown(Keys.Control).Perform();
+            allParts.FindElementByName("GUIDE-VALVE").Click();
+            allParts.FindElementByName("HEAD-CYL").Click();
+            allParts.FindElementByName("liner").Click();
+            allParts.FindElementByName("valve-exh").Click();
+            allParts.FindElementByName("valve-int").Click();
+            allParts.FindElementByName("valve-seat-exh").Click();
+            allParts.FindElementByName("valve-seat-int").Click();
+            action.MoveToElement(block);
+            action.ContextClick().Perform();
+            action.SendKeys(Keys.Down);
+            action.SendKeys(Keys.Enter).Perform();
+
+            action = new Actions(Driver);
+            action.KeyUp(Keys.Control).Perform();
+
+            var freeEdges = jupiter.FindElementByName("Mesh Quality | Free Edges");
+            var nonManifold = freeEdges.FindElementByAccessibilityId("1008");
+            if (nonManifold.Selected) nonManifold.Click();
+            freeEdges.FindElementByName("OK").Click();
+
+            System.Threading.Thread.Sleep(5000);
+
+
         }
 
         public static void InputId(int faceId, WindowsElement idBox, Actions action,

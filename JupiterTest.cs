@@ -45,11 +45,11 @@ namespace JupiterTestAPI
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            /*if (Driver != null)
+            if (Driver != null)
             {
                 Driver.Quit();
                 Driver = null;
-            }*/
+            }
 
         }
 
@@ -71,7 +71,7 @@ namespace JupiterTestAPI
             System.Threading.Thread.Sleep(1000);
             action = new Actions(Driver);
             Assert.IsNotNull(action);
-            action.SendKeys(@"V:\TechnoStar\Mazda\R2-IDI3_TS.jtdb");
+            action.SendKeys(@"D:\TechnoStar\Mazda\R2-IDI3_TS.jtdb");
             action.SendKeys(Keys.Enter);
             action.Perform();
 
@@ -164,7 +164,7 @@ namespace JupiterTestAPI
 
             System.Threading.Thread.Sleep(1000);
             action = new Actions(Driver);
-            action.SendKeys(@"V:\TechnoStar\Mazda\01_Groups.jtdb");
+            action.SendKeys(@"D:\TechnoStar\Mazda\01_Groups.jtdb");
             action.SendKeys(Keys.Enter);
             action.Perform();
         }
@@ -177,7 +177,7 @@ namespace JupiterTestAPI
             System.Threading.Thread.Sleep(1000);
             action = new Actions(Driver);
             Assert.IsNotNull(action);
-            action.SendKeys(@"V:\TechnoStar\Mazda\01_Groups.jtdb");
+            action.SendKeys(@"D:\TechnoStar\Mazda\01_Groups.jtdb");
             action.SendKeys(Keys.Enter);
             action.Perform();
 
@@ -267,7 +267,7 @@ namespace JupiterTestAPI
 
             System.Threading.Thread.Sleep(1000);
             var saveText = Driver.FindElementByAccessibilityId("1001");
-            saveText.SendKeys(@"V:\TechnoStar\Mazda\02_Local_Settings.jtdb");
+            saveText.SendKeys(@"D:\TechnoStar\Mazda\02_Local_Settings.jtdb");
             saveText.SendKeys(Keys.Enter);
         }
 
@@ -279,7 +279,7 @@ namespace JupiterTestAPI
             System.Threading.Thread.Sleep(1000);
             action = new Actions(Driver);
             Assert.IsNotNull(action);
-            action.SendKeys(@"V:\TechnoStar\Mazda\02_Local_Settings.jtdb");
+            action.SendKeys(@"D:\TechnoStar\Mazda\02_Local_Settings.jtdb");
             action.SendKeys(Keys.Enter);
             action.Perform();
 
@@ -317,7 +317,7 @@ namespace JupiterTestAPI
             meshSurf.FindElementByAccessibilityId("1004").SendKeys("1");
             meshSurf.FindElementByName("OK").Click();
 
-            System.Threading.Thread.Sleep(240000);
+            System.Threading.Thread.Sleep(180000);
             action = new Actions(Driver);
             action.MoveToElement(meshSurf).Click();
             action.SendKeys(Keys.Escape);
@@ -328,8 +328,236 @@ namespace JupiterTestAPI
 
             System.Threading.Thread.Sleep(1000);
             var saveText = Driver.FindElementByAccessibilityId("1001");
-            saveText.SendKeys(@"V:\TechnoStar\Mazda\03_Surface_meshing.jtdb.jtdb");
+            saveText.SendKeys(@"D:\TechnoStar\Mazda\03_Surface_meshing.jtdb");
             saveText.SendKeys(Keys.Enter);
+        }
+
+        [TestMethod]
+        public void CreateMesh4()
+        {
+            Driver.FindElementByName("Open...").Click();
+
+            System.Threading.Thread.Sleep(1000);
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.SendKeys(@"D:\TechnoStar\Mazda\03_Surface_meshing.jtdb");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+
+            toolBar.FindElementByName("Mesh Cleanup").Click();
+            var freeEdgeIcon = Driver.FindElementByName("Free Edges");
+            freeEdgeIcon.Click();
+
+            allParts = Driver.FindElementByName("All Parts");
+            var block = allParts.FindElementByName("BLOCK");
+            block.Click();
+            action = new Actions(Driver);
+            action.KeyDown(Keys.Control).Perform();
+            allParts.FindElementByName("GUIDE-VALVE").Click();
+            allParts.FindElementByName("HEAD-CYL").Click();
+            allParts.FindElementByName("liner").Click();
+            allParts.FindElementByName("valve-exh").Click();
+            allParts.FindElementByName("valve-int").Click();
+            allParts.FindElementByName("valve-seat-exh").Click();
+            allParts.FindElementByName("valve-seat-int").Click();
+            action.MoveToElement(block);
+            action.ContextClick().Perform();
+            action.SendKeys(Keys.Down);
+            action.SendKeys(Keys.Enter).Perform();
+
+            action = new Actions(Driver);
+            action.KeyUp(Keys.Control).Perform();
+
+            var freeEdges = jupiter.FindElementByName("Mesh Quality | Free Edges");
+            var nonManifold = freeEdges.FindElementByAccessibilityId("1008");
+            if (nonManifold.Selected) nonManifold.Click();
+            freeEdges.FindElementByName("OK").Click();
+
+            System.Threading.Thread.Sleep(5000);
+
+            var manual2DIcon = Driver.FindElementByName("Manual 2D");
+
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(manual2DIcon);
+            action.MoveToElement(manual2DIcon, manual2DIcon.Size.Width / 2, manual2DIcon.Size.Height / 2 + 20).Click();
+            action.Perform();
+
+            Driver.FindElementByName("Equivalence").Click();
+            var manual2D = jupiter.FindElementByName("Manual Cleanup 2D | Equivalence");
+
+            //var mergetowards = manual2D.FindElementByName("Merge Towards");
+            //mergetowards.Click();
+            // mergetowards.FindElementByName("First Node").Click();
+            var multipleNode = manual2D.FindElementByName("Multiple Node");
+            if (multipleNode.Selected) multipleNode.Click();
+
+            manual2D.FindElementByName("Node").Click();
+            toolBar.FindElementByName("Home").Click();
+            var find = Driver.FindElementByName("Find");
+            Assert.IsNotNull(find);
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys("n");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+
+            WindowsElement idBox = Driver.FindElementByAccessibilityId("1582");
+            Assert.IsNotNull(idBox);
+            InputId(977545, idBox, action, Driver, find);
+            InputId(976130, idBox, action, Driver, find);
+            manual2D.FindElementByName("Apply").Click();
+
+            InputId(977548, idBox, action, Driver, find);
+            InputId(977578, idBox, action, Driver, find);
+            manual2D.FindElementByName("Apply").Click();
+
+            InputId(977520, idBox, action, Driver, find);
+            InputId(976091, idBox, action, Driver, find);
+            manual2D.FindElementByName("Apply").Click();
+
+            InputId(977523, idBox, action, Driver, find);
+            InputId(977565, idBox, action, Driver, find);
+            manual2D.FindElementByName("Apply").Click();
+
+            InputId(977533, idBox, action, Driver, find);
+            InputId(976119, idBox, action, Driver, find);
+            manual2D.FindElementByName("Apply").Click();
+
+            InputId(977536, idBox, action, Driver, find);
+            InputId(977572, idBox, action, Driver, find);
+            manual2D.FindElementByName("Apply").Click();
+
+            InputId(977502, idBox, action, Driver, find);
+            InputId(976093, idBox, action, Driver, find);
+            manual2D.FindElementByName("Apply").Click();
+
+            InputId(977505, idBox, action, Driver, find);
+            InputId(977512, idBox, action, Driver, find);
+            manual2D.FindElementByName("Apply").Click();
+
+
+            toolBar.FindElementByName("Mesh Cleanup").Click();
+            jupiter.FindElementByName("Manual Cleanup 2D").FindElementByName("Close").Click();
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(manual2DIcon);
+            action.MoveToElement(manual2DIcon, manual2DIcon.Size.Width / 2, manual2DIcon.Size.Height / 2 + 20).Click();
+            action.Perform();
+
+            Driver.FindElementByName("Collapse").Click();
+            var collapse = jupiter.FindElementByName("Manual Cleanup 2D | Collapse");
+
+            collapse.FindElementByName("Node").Click();
+            toolBar.FindElementByName("Home").Click();
+            InputId(977545, idBox, action, Driver, find);
+            collapse.FindElementByName("Minimum").Click();
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            InputId(977520, idBox, action, Driver, find);
+            collapse.FindElementByName("Minimum").Click();
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            InputId(977533, idBox, action, Driver, find);
+            collapse.FindElementByName("Minimum").Click();
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            InputId(977502, idBox, action, Driver, find);
+            collapse.FindElementByName("Minimum").Click();
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            InputId(381270, idBox, action, Driver, find);
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys("1");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+            InputId("381270-976137", idBox, action, Driver, find);
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys("n");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+            InputId(977585, idBox, action, Driver, find);
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys("1");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+            InputId("364714-977585", idBox, action, Driver, find);
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys("n");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+            InputId(977585, idBox, action, Driver, find);
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys("1");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+            InputId("977558-977585", idBox, action, Driver, find);
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys("n");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+            InputId(6016, idBox, action, Driver, find);
+            action = new Actions(Driver);
+            Assert.IsNotNull(action);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2, find.Size.Height / 3 + 20).Click();
+            action.SendKeys("1");
+            action.SendKeys(Keys.Enter);
+            action.Perform();
+            InputId("6016-555096", idBox, action, Driver, find);
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            InputId(555097, idBox, action, Driver, find);
+            collapse.FindElementByName("Minimum").Click();
+            collapse.FindElementByName("Apply").Click();
+            collapse.FindElementByName("Next>").Click();
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            InputId(10030, idBox, action, Driver, find);
+            collapse.FindElementByName("Minimum").Click();
+            collapse.FindElementByName("Apply").Click();
+            collapse.FindElementByName("Apply").Click();
+            collapse.FindElementByName("Apply").Click();
+
+            collapse.FindElementByName("Node").Click();
+            InputId(386909, idBox, action, Driver, find);
+            collapse.FindElementByName("Minimum").Click();
+            collapse.FindElementByName("Apply").Click();
         }
 
         public static void InputId(int faceId, WindowsElement idBox, Actions action,
@@ -337,6 +565,16 @@ namespace JupiterTestAPI
         {
             idBox.SendKeys(Keys.Control + "a" + Keys.Control);
             idBox.SendKeys(Convert.ToString(faceId));
+            action = new Actions(sessionJpt);
+            action.MoveToElement(find);
+            action.MoveToElement(find, find.Size.Width / 2 - 30, find.Size.Height / 3 - 4).Click().Perform();
+        }
+
+        public static void InputId(string faceId, WindowsElement idBox, Actions action,
+                            WindowsDriver<WindowsElement> sessionJpt, WindowsElement find)
+        {
+            idBox.SendKeys(Keys.Control + "a" + Keys.Control);
+            idBox.SendKeys(faceId);
             action = new Actions(sessionJpt);
             action.MoveToElement(find);
             action.MoveToElement(find, find.Size.Width / 2 - 30, find.Size.Height / 3 - 4).Click().Perform();
